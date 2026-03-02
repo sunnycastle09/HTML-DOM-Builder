@@ -1,0 +1,101 @@
+DOCTYPE:!DOCTYPE html
+StartTag:html
+Attribute Name:lang
+Attribute Value:ko
+StartTag:head
+StartTag:meta
+Attribute Name:charset
+Attribute Value:UTF-8
+StartTag:title
+Character:Final Test
+EndTag:title
+EndTag:head
+StartTag:body
+StartTag:div
+Attribute Name:id
+Attribute Value:wrapper
+Attribute Name:class
+Attribute Value:main-container
+StartTag:header
+StartTag:h1
+Attribute Name:id
+Attribute Value:logo
+Attribute Name:data-value
+Attribute Value:100
+Character:MyBrowser
+EndTag:h1
+StartTag:nav
+StartTag:ul
+Attribute Name:class
+Attribute Value:menu-list
+StartTag:li
+Attribute Name:class
+Attribute Value:item active
+StartTag:a
+Attribute Name:href
+Attribute Value:/home
+Character:Home
+EndTag:a
+EndTag:li
+StartTag:li
+Attribute Name:class
+Attribute Value:item
+StartTag:a
+Attribute Name:href
+Attribute Value:/about
+Character:About
+EndTag:a
+EndTag:li
+EndTag:ul
+EndTag:nav
+EndTag:header
+StartTag:section
+Attribute Name:class
+Attribute Value:banner
+StartTag:h2
+Character:Welcome!
+EndTag:h2
+StartTag:img
+Attribute Name:src
+Attribute Value:banner.jpg
+Attribute Name:alt
+Attribute Value:Welcome Banner
+Attribute Name:width
+Attribute Value:600
+Attribute Name:height
+Attribute Value:300
+Attribute Name:border
+Attribute Value:0
+StartTag:br
+StartTag:input
+Attribute Name:type
+Attribute Value:text
+Attribute Name:value
+Attribute Value:Search here...
+Attribute Name:readonly
+EndTag:section
+StartTag:footer
+Attribute Name:id
+Attribute Value:footer
+StartTag:p
+Attribute Name:class
+Attribute Value:copy
+Character:&copy; 2026 Project Gemini.
+EndTag:p
+StartTag:div
+Attribute Name:class
+Attribute Value:links
+StartTag:a
+Attribute Name:href
+Attribute Value:mailto:test@test.com
+Character:Contact
+EndTag:a
+StartTag:hr
+StartTag:span
+Character:All rights reserved.
+EndTag:span
+EndTag:div
+EndTag:footer
+EndTag:div
+EndTag:body
+EndTag:html
