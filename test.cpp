@@ -158,12 +158,12 @@ public:
 		text = a;
 	}
 	std::string tag_name() override { return "character"; }
-	std::string o_text() override{
+	std::string o_text() override {
 		return text;
 	}
 };
 void print_tree(Node* node, int depth);
-std::string character_node_buffer="";
+std::string character_node_buffer = "";
 int main() {
 	std::string a = "index.html";
 	std::string token;
@@ -182,7 +182,7 @@ int main() {
 	outFile.close();
 	std::ifstream file2("token_excepted_attribute.txt");//ifstream뭔가 이상
 	while (std::getline(file2, token)) {
-		if ((after_colon(token) == "src") &&(after_colon(token) == "br") && (after_colon(token) == "mata") && (after_colon(token) == "img") && (after_colon(token) == "input")) {
+		if ((after_colon(token) == "src") && (after_colon(token) == "br") && (after_colon(token) == "mata") && (after_colon(token) == "img") && (after_colon(token) == "input")) {
 			token_state.push_back('c');
 		}
 		else {
@@ -218,12 +218,12 @@ int main() {
 		else if (token_value == "ul") { sooe.push_back(new HTMLUListElement()); }
 		else if (token_value == "li") { sooe.push_back(new HTMLLIElement()); }
 		else if (token_value == "br") { sooe.push_back(new HTMLBRElement()); }
-		else if(token_value=="character") { sooe.push_back(new HTMLCharacterElement(character_node_buffer)); character_node_buffer = ""; }
+		else if (token_value == "character") { sooe.push_back(new HTMLCharacterElement(character_node_buffer)); character_node_buffer = ""; }
 		if (token_state[indexer] == 'e') {
 			sooe.pop_back();
 			sooe.pop_back();
 		}
-		else if ((token_state[indexer] == 'c')|| (sooe[sooe.size() - 1]->tag_name() == "br") || (sooe[sooe.size() - 1]->tag_name() == "meta") || (sooe[sooe.size() - 1]->tag_name() == "input") || (sooe[sooe.size() - 1]->tag_name() == "src")) {
+		else if ((token_state[indexer] == 'c') || (sooe[sooe.size() - 1]->tag_name() == "br") || (sooe[sooe.size() - 1]->tag_name() == "meta") || (sooe[sooe.size() - 1]->tag_name() == "input") || (sooe[sooe.size() - 1]->tag_name() == "src")) {
 			sooe[sooe.size() - 1]->parent = sooe[sooe.size() - 2];
 			for (int i = 0; i < sooe.size() - 1; i++) {
 				sooe[i]->children.push_back(sooe[sooe.size() - 1]);
@@ -246,7 +246,7 @@ void print_tree(Node* node, int depth) {
 		std::cout << "  ";
 	}
 	if (node->tag_name() == "character") {
-		// 'character' 대신 실제 텍스트 내용을 출력
+		// character 대신 실제 텍스트 내용을 출력
 		std::cout << node->o_text() << "\n";
 	}
 	else {
@@ -255,7 +255,7 @@ void print_tree(Node* node, int depth) {
 	for (Node* a : node->children) {
 		if (!a->exp) { print_tree(a, depth + 1); }
 	}
-	if ((node->tag_name() != "character") && (node->tag_name() != "br") && (node->tag_name() != "meta") && (node->tag_name() != "input")&& (node->tag_name() != "src")) {
+	if ((node->tag_name() != "character") && (node->tag_name() != "br") && (node->tag_name() != "meta") && (node->tag_name() != "input") && (node->tag_name() != "src")) {
 		for (int i = 0; i < depth; i++) {
 			std::cout << "  ";
 		}
