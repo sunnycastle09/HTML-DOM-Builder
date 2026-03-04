@@ -20,6 +20,8 @@ public:
 	std::string href;
 	Node* parent = nullptr;
 	std::vector<Node*> children;
+	bool exp = false;
+	virtual std::string o_text() { return ""; }
 };
 
 class HTMLDoctypeElement : public Node {
@@ -35,6 +37,7 @@ public:
 class HTMLBodyElement : public Node {
 public:
 	std::string tag_name() override { return "body"; }
+
 };
 
 class HTMLMetaElement : public Node {
@@ -105,7 +108,7 @@ public:
 
 class HTMLImageElement : public Node {
 public:
-	std::string tag_name() override { return "img"; }
+	std::string tag_name() override { return "src"; }
 	std::string src;
 	int width = 0;
 	int height = 0;
@@ -150,15 +153,19 @@ public:
 
 class HTMLCharacterElement : public Node {
 public:
-	std::string character;
+	std::string text;
 	HTMLCharacterElement(std::string a) {
-		character=a;
+		text = a;
 	}
 	std::string tag_name() override { return "character"; }
+	std::string o_text() override{
+		return text;
+	}
 };
-std::string character_node_buffer;
+void print_tree(Node* node, int depth);
+std::string character_node_buffer="";
 int main() {
-	std::string a = "test_index.html";
+	std::string a = "index.html";
 	std::string token;
 	tokenizer(a);
 	std::ifstream file("token.txt");
@@ -175,7 +182,12 @@ int main() {
 	outFile.close();
 	std::ifstream file2("token_excepted_attribute.txt");//ifstream뭔가 이상
 	while (std::getline(file2, token)) {
-		token_state.push_back(before_colon(token));//d , s,  s ...	
+		if ((after_colon(token) == "src") &&(after_colon(token) == "br") && (after_colon(token) == "mata") && (after_colon(token) == "img") && (after_colon(token) == "input")) {
+			token_state.push_back('c');
+		}
+		else {
+			token_state.push_back(before_colon(token));//d , s,  s ...	
+		}
 	}
 	file2.close();
 	std::ifstream file3("token_excepted_attribute.txt");
@@ -183,6 +195,7 @@ int main() {
 	HTMLDoctypeElement origin;
 	sooe.push_back(&origin);
 	std::string token_value;
+	character_node_buffer = "";
 	while (std::getline(file3, token)) {
 		token_value = after_colon(token);
 		if (token_value == "html") { sooe.push_back(new HTMLHtmlElement()); }
@@ -200,25 +213,21 @@ int main() {
 		else if (token_value == "span") { sooe.push_back(new HTMLSpanElement()); }
 		else if (token_value == "p") { sooe.push_back(new HTMLParagraphElement()); }
 		else if (token_value == "a") { sooe.push_back(new HTMLAnchorElement()); }
-		else if (token_value == "img") { sooe.push_back(new HTMLImageElement()); }
+		else if (token_value == "src") { sooe.push_back(new HTMLImageElement()); }
 		else if (token_value == "input") { sooe.push_back(new HTMLInputElement()); }
 		else if (token_value == "ul") { sooe.push_back(new HTMLUListElement()); }
 		else if (token_value == "li") { sooe.push_back(new HTMLLIElement()); }
 		else if (token_value == "br") { sooe.push_back(new HTMLBRElement()); }
-		else if (token_value == "character") { sooe.push_back(new HTMLCharacterElement(character_node_buffer)); character_node_buffer = ""; }
+		else if(token_value=="character") { sooe.push_back(new HTMLCharacterElement(character_node_buffer)); character_node_buffer = ""; }
 		if (token_state[indexer] == 'e') {
 			sooe.pop_back();
 			sooe.pop_back();
 		}
-		else if (token_state[indexer] == 'c') {
+		else if ((token_state[indexer] == 'c')|| (sooe[sooe.size() - 1]->tag_name() == "br") || (sooe[sooe.size() - 1]->tag_name() == "meta") || (sooe[sooe.size() - 1]->tag_name() == "input") || (sooe[sooe.size() - 1]->tag_name() == "src")) {
 			sooe[sooe.size() - 1]->parent = sooe[sooe.size() - 2];
 			for (int i = 0; i < sooe.size() - 1; i++) {
 				sooe[i]->children.push_back(sooe[sooe.size() - 1]);
 			}
-			sooe.pop_back();
-		}
-		else if ((sooe[sooe.size() - 1]->tag_name() == "br") || (sooe[sooe.size() - 1]->tag_name() == "meta") || (sooe[sooe.size() - 1]->tag_name() == "input") || (sooe[sooe.size() - 1]->tag_name() == "img")) {
-			sooe[sooe.size() - 1]->parent = sooe[sooe.size() - 1];
 			sooe.pop_back();
 		}
 		else {
@@ -228,18 +237,35 @@ int main() {
 		}
 		indexer++;
 	}//while문 끝
-	std::vector<Node*>fst_instance;
-	std::vector<Node*>scd_instance;
-	std::vector<Node*>thd_instance;
-	std::vector<Node*>fth_instance;
-	std::vector<int> fst_instance_c;
-	std::vector<int> scd_instance_c;
-	std::vector<int> thd_instance_c;
-	std::vector<int> fth_instance_c;
+	print_tree(&origin, 0);
 
 }
 
-std::string after_colon(std::string tk)	{
+void print_tree(Node* node, int depth) {
+	for (int i = 0; i < depth; i++) {
+		std::cout << "  ";
+	}
+	if (node->tag_name() == "character") {
+		// 'character' 대신 실제 텍스트 내용을 출력
+		std::cout << node->o_text() << "\n";
+	}
+	else {
+		std::cout << node->tag_name() << "\n";
+	}
+	for (Node* a : node->children) {
+		if (!a->exp) { print_tree(a, depth + 1); }
+	}
+	if ((node->tag_name() != "character") && (node->tag_name() != "br") && (node->tag_name() != "meta") && (node->tag_name() != "input")&& (node->tag_name() != "src")) {
+		for (int i = 0; i < depth; i++) {
+			std::cout << "  ";
+		}
+		std::cout << "/" << node->tag_name() << "\n";
+	}
+	node->exp = true;
+}
+
+
+std::string after_colon(std::string tk) {
 	std::string temp;
 	if (tk[0] == 'S') {
 		for (int i = 9; i < tk.size(); i++) {
@@ -261,7 +287,7 @@ std::string after_colon(std::string tk)	{
 			character_node_buffer += tk[i];
 		}
 		temp = "character";
-		
+
 	}
 	return temp;
 }
@@ -275,7 +301,7 @@ char before_colon(std::string tk) {
 	else if (tk[0] == 'D') {
 		return 'd';
 	}
-	else if (tk[0] == 'C')	{
+	else if (tk[0] == 'C') {
 		return 'c';
 	}
 }
@@ -343,15 +369,15 @@ void tokenizer(std::string file_name) {
 			}
 		}
 		else if (state == "Character") {
-            if (c == '<') {
-                outFile << "Character:" << character_buffer << "\n";
-                character_buffer = "";
-                state = "Tag Open"; 
-            }
-            else {
-                character_buffer += c;
-            }
-        }
+			if (c == '<') {
+				outFile << "Character:" << character_buffer << "\n";
+				character_buffer = "";
+				state = "Tag Open";
+			}
+			else {
+				character_buffer += c;
+			}
+		}
 		else if (state == "Attribute Name") {
 			if (c == '>') {
 				outFile << "Attribute Name:" << attribute_buffer << "\n";
