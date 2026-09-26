@@ -182,7 +182,7 @@ int main() {
 	outFile.close();
 	std::ifstream file2("token_excepted_attribute.txt");//ifstream뭔가 이상
 	while (std::getline(file2, token)) {
-		if ((after_colon(token) == "src") && (after_colon(token) == "br") && (after_colon(token) == "mata") && (after_colon(token) == "img") && (after_colon(token) == "input")) {
+		if ((after_colon(token) == "src") || (after_colon(token) == "br") || (after_colon(token) == "mata") || (after_colon(token) == "img") || (after_colon(token) == "input")) {
 			token_state.push_back('c');
 		}
 		else {
